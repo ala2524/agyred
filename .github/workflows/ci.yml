@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.x'
+          cache: true
+
+      - name: Verify dependencies
+        run: go mod verify
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Run Tests
+        run: go test -v ./...
+
+      - name: Build Binary
+        run: go build -v -o agyred${{ matrix.os == 'windows-latest' && '.exe' || '' }} .

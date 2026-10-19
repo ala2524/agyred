@@ -1,0 +1,10 @@
+/agyred
+/agyred.exe
+/agm
+/agm.exe
+dist/
+*.test
+.DS_Store
+*.db
+*.db-*
+.mk
